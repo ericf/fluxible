@@ -24,22 +24,30 @@ describe('handleRoute', function () {
     var handleRoute;
     var mockContext;
 
-    beforeEach(function () {
-        mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-        });
-        global.document = jsdom.jsdom('<html><body></body></html>');
-        global.window = global.document.parentWindow;
-        global.navigator = global.window.navigator;
-        React = require('react');
-        ReactDOM = require('react-dom');
-        ReactTestUtils = require('react-addons-test-utils');
-        provideContext = require('fluxible-addons-react/provideContext');
-        handleRoute = require('../../../').handleRoute;
-        mockContext = createMockComponentContext({
-            stores: [TestRouteStore]
+    beforeEach(function (done) {
+        jsdom.env('<html><body></body></html>', [], function (err, window) {
+            if (err) {
+                done(err);
+            }
+            global.document = window.document;
+            global.window = window;
+            global.navigator = window.navigator;
+
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+
+            React = require('react');
+            ReactDOM = require('react-dom');
+            ReactTestUtils = require('react-addons-test-utils');
+            provideContext = require('fluxible-addons-react/provideContext');
+            handleRoute = require('../../../').handleRoute;
+            mockContext = createMockComponentContext({
+                stores: [TestRouteStore]
+            });
+            done();
         });
     });
 
